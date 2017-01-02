@@ -1,0 +1,10 @@
+<a href="/user/<%= comment.user_id %>"><%= comment.user.name %></a>
+<p><%= comment.content %></p>
+
+<% if user_in_ids?(answer.user_id, comment.user_id, 1) %>
+  <%=
+    %Q|<a href="javascript: deleteContent('comment', #{ comment.id } );">删除</a>|
+  %>
+<% end %>
+<br>
+

@@ -1,0 +1,73 @@
+<% user_vote = answer.votes.find_by(user_id: session[:user].id) if session[:user] %>
+<% if user_vote.nil? || user_vote.agree.nil?
+     action_up, action_down = 'upvote', 'downvote'
+   elsif user_vote.agree
+     action_up, action_down = 'unvote', 'downvote'
+   else
+     action_up, action_down = 'upvote', 'unvote'
+   end %>
+<div class="item-answer">
+  <div class="votebar">   
+    <!--
+    <a class="up" href="/answer/<%= answer.id %>/<%= action_up %>">
+      <span>赞同</span>
+    </a>
+    <span><%= answer.votes.where(agree: true).length %></span>
+    <a class="down" href="/answer/<%= answer.id %>/<%= action_down %>">
+      <span>反对</span>
+    </a>
+    -->
+    <button class="up" aria-pressed="false" title="赞同">
+      <i class="icon vote-arrow"></i>
+      <span class="count"><%= answer.votes.where(agree: true).length %></span>
+    </button>
+    <button class="down" aria-pressed="false" title="反对，不会显示你的姓名">
+      <i class="icon vote-arrow"></i>
+    </button>
+  </div>
+
+  <div class="answer-head">
+    <div class="answer-author-info">
+      <div class="author-link-line">
+        <a class="author-link" href="/user/<%= answer.user.id %>"><%= answer.user.name %></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="rich-text">
+    <p><%= answer.content %></p>
+  </div>
+
+
+  <div class="meta-panel">
+  <% if session[:user] && answer.user_id == session[:user].id %>
+    <a href="javascript: showElement('<%= "editor#{answer.id}" %>');">修改</a>
+    <div id="<%= "editor#{answer.id}" %>" style="display: none">
+      <form action="/answer/<%= answer.id %>" method="post">
+        <input type="hidden" name="_method" value="put">
+        <textarea name="content" rows="5" cols="60"><%= answer.content %></textarea>
+        <input type="submit" formaction="javascript: showElement('<%= "editor#{answer.id}" %>');" value="取消">
+        <input type="submit" value="保存">
+      </form>
+    </div>
+  <% end %>
+
+  <a class="meta-item" href="javascript: showElement(<%= "\'cmt#{answer.id}\'" %>);">评论</a>
+  <div id="<%= "cmt#{answer.id}" %>" class="comments">
+    <% answer.comments.each do |comment| %>
+      <%= erb :comment, :locals => { comment: comment, answer: answer } %>
+    <% end %>
+    <form action="/answer/<%= answer.id %>/comment" method="post">
+      <textarea name="content" cols="50" rows="3"></textarea>
+      <input type="submit" value="发表评论">
+    </form>
+    <br>
+  </div>
+
+  <% if user_in_ids?(answer.user_id, 1) %>
+    <%=
+      %Q|<a class="meta-item" href="javascript: deleteContent('answer', #{ answer.id } );">删除</a>|
+    %>
+  <% end %>
+  </div>
+</div>

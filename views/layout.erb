@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <script type="text/javascript" src="/js/main.js"></script>
+  </head>
+  <body>
+    <div id="modal"></div>
+    <div class="sa-top">
+      <div id="sa-top-inner" class="zg-wrap">
+        <a id="sh-top-link-logo" class="sh-top-link-logo" href="/">SHIRUKA</a> 
+        <ul class="sa-top-nav-ul">
+          <li class="sa-top-nav-li">
+            <a class="sa-top-nav-link" href="/">首页</a>
+          </li>
+          <li class="sa-top-nav-li">
+            <a class="sa-top-nav-link" href="/ask">提问</a>
+          </li>
+          <li class="sa-top-nav-li">
+            <a class="sa-top-nav-link" href="/explore">发现</a>
+          </li>
+          <li class="sa-top-nav-li">
+            <a class="sa-top-nav-link" href="/logout">退出</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="sa-main zg-wrap">
+      <div class="sa-main-content">
+        <div class="sa-main-content-inner">
+          <%= yield %>
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+<div class="tag_area">
+  <% @question.topics.each do |topic| %>
+    <span>
+    <a href="/topic/<%= topic.id %>"><%= topic.name %></a>
+    <a id="rmid-<%= topic.id %>" class="tag-editor-remove-button"
+       href="/question/<%= @question.id %>/deltopic?topic=<%= topic.name %>" name="remove">&times;</a>
+    </span>
+  <% end %>
+  <a href="javascript:;" id="edit_tags">
+    <% if @question.topics.length == 0 %>
+      填加话题
+    <% else %>
+      修改
+    <% end %>
+  </a>
+  <div id="tag_editor" style="display: none">
+    <form action="/question/<%= @question.id %>/addtopic" method="get">
+    <input id="topic-search-box" name="topic" type="text" onkeyup="showResult(this.value)">
+    <input type="submit" value="添加">
+    <div id="livesearch"></div>
+  </form>
+  </div>
+</div>
+
+<div id="question-title">
+  <h2 class="item-title"><%= @question.name %></h2>
+</div>
+
+<div id="question-detail" class="rich-text">
+  <p><%= @question.description %></p>
+</div>
+
+<div class="answers-title">
+  <h3 id="question-answer-num"><%= "#{@question.answers.length}个回答" %></h3>
+</div>
+
+<div id="question-answer-wrap" class="question-answer-wrapper">
+  <% @question.answers.each do |answer| %>
+    <%= erb :answer, :locals => { answer: answer } %>
+    <br>
+  <% end %>
+</div>
+
+<% if session[:user] && @question.answers.find_by(user_id: session[:user].id)
+     a = '<span>一个问题只能回答一次</sapn>'
+   else
+     a =<<-EOS
+      我来回答：<br>
+      <form action="/question/#{ @question.id }/answer" method="post">
+        <textarea name="content" rows="5" cols="60">
+        </textarea><br>
+        <input type="submit" value="发布回答">
+      </form>
+     EOS
+   end
+ %>
+ <%= a %>

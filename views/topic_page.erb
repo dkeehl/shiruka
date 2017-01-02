@@ -1,0 +1,6 @@
+<% @questions.each do |q| %>
+  <% answer = q.answers.first %>
+  <a href="/question/<%= q.id %>"><%= q.name %></a>
+  <br>
+  <%= erb :answer, locals: {answer: answer} %>
+<% end %>

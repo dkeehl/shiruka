@@ -1,0 +1,11 @@
+<span><%= @user.name %></span><br>
+<span>关注了</span><span><%= @user.followings.length %></span><span>人</span>
+<span>关注者</span><span><%= @user.followers.length %></span><span>人</span>
+<form action="/followuser/<%= @user.id %>" method="get">
+  <input type="submit" value=
+  "<%= if session[:user] && @user.followers.exists?(session[:user].id)
+        '取消关注'
+      else
+        '关注'
+      end %>">
+</form>
