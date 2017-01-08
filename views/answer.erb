@@ -1,27 +1,25 @@
 <% user_vote = answer.votes.find_by(user_id: session[:user].id) if session[:user] %>
 <% if user_vote.nil? || user_vote.agree.nil?
-     action_up, action_down = 'upvote', 'downvote'
+     button_info = {up: {action: 'upvote', pressed: false, title: '赞同'},
+                    down: {action: 'downvote', pressed: false, title: '反对，不会显示你的姓名'}}
    elsif user_vote.agree
-     action_up, action_down = 'unvote', 'downvote'
+     button_info = {up: {action: 'unvote', pressed: true, title: '取消赞同'},
+                    down: {action: 'downvote', pressed: false, title: '反对，不会显示你的姓名'}}
    else
-     action_up, action_down = 'upvote', 'unvote'
+     button_info = {up: {action: 'upvote', pressed: false, title: '赞同'},
+                    down: {action: 'unvote', pressed: true, title: '取消反对'}}
    end %>
-<div class="item-answer">
+<div id="<%= "item-answer-#{answer.id}" %>" class="item-answer">
   <div class="votebar">   
-    <!--
-    <a class="up" href="/answer/<%= answer.id %>/<%= action_up %>">
-      <span>赞同</span>
-    </a>
-    <span><%= answer.votes.where(agree: true).length %></span>
-    <a class="down" href="/answer/<%= answer.id %>/<%= action_down %>">
-      <span>反对</span>
-    </a>
-    -->
-    <button class="up" aria-pressed="false" title="赞同">
+    <button class="up" aria-pressed="<%= button_info[:up][:pressed] %>"
+    title="<%= button_info[:up][:title] %>"
+    onclick="<%= "#{button_info[:up][:action]}(#{answer.id})" %>" >
       <i class="icon vote-arrow"></i>
       <span class="count"><%= answer.votes.where(agree: true).length %></span>
     </button>
-    <button class="down" aria-pressed="false" title="反对，不会显示你的姓名">
+    <button class="down" aria-pressed="<%= button_info[:down][:pressed] %>"
+    title="<%= button_info[:down][:title] %>"
+    onclick="<%= "#{button_info[:down][:action]}(#{answer.id})" %>" >
       <i class="icon vote-arrow"></i>
     </button>
   </div>
@@ -41,19 +39,25 @@
 
   <div class="meta-panel">
   <% if session[:user] && answer.user_id == session[:user].id %>
-    <a href="javascript: showElement('<%= "editor#{answer.id}" %>');">修改</a>
-    <div id="<%= "editor#{answer.id}" %>" style="display: none">
-      <form action="/answer/<%= answer.id %>" method="post">
-        <input type="hidden" name="_method" value="put">
-        <textarea name="content" rows="5" cols="60"><%= answer.content %></textarea>
-        <input type="submit" formaction="javascript: showElement('<%= "editor#{answer.id}" %>');" value="取消">
-        <input type="submit" value="保存">
-      </form>
-    </div>
+    <a class="meta-item" href="javascript: showElement('<%= "editor#{answer.id}" %>');">修改</a>
   <% end %>
 
   <a class="meta-item" href="javascript: showElement(<%= "\'cmt#{answer.id}\'" %>);">评论</a>
-  <div id="<%= "cmt#{answer.id}" %>" class="comments">
+
+  <% if user_in_ids?(answer.user_id, 1) %>
+    <%=
+      %Q|<a class="meta-item" href="javascript: deleteContent('answer', #{ answer.id } );">删除</a>|
+    %>
+  <% end %>
+  <div id="<%= "editor#{answer.id}" %>" style="display: none">
+    <form action="/answer/<%= answer.id %>" method="post">
+      <input type="hidden" name="_method" value="put">
+      <textarea name="content" rows="5" cols="60"><%= answer.content %></textarea>
+      <input type="submit" formaction="javascript: showElement('<%= "editor#{answer.id}" %>');" value="取消">
+      <input type="submit" value="保存">
+    </form>
+  </div>
+  <div id="<%= "cmt#{answer.id}" %>" class="comments" style="display: none">
     <% answer.comments.each do |comment| %>
       <%= erb :comment, :locals => { comment: comment, answer: answer } %>
     <% end %>
@@ -63,11 +67,5 @@
     </form>
     <br>
   </div>
-
-  <% if user_in_ids?(answer.user_id, 1) %>
-    <%=
-      %Q|<a class="meta-item" href="javascript: deleteContent('answer', #{ answer.id } );">删除</a>|
-    %>
-  <% end %>
   </div>
 </div>

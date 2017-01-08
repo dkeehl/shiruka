@@ -151,7 +151,7 @@ get '/answer/:id/upvote' do
     vote.update(agree: true)
   end
 
-  redirect request.referer 
+  Vote.where(answer: params[:id], agree: true).length.to_s
 end
 
 get '/answer/:id/downvote' do
@@ -165,7 +165,7 @@ get '/answer/:id/downvote' do
     vote.update(agree: false)
   end
 
-  redirect request.referer 
+  Vote.where(answer: params[:id], agree: true).length.to_s
 end
 
 get '/answer/:id/unvote' do
@@ -173,7 +173,7 @@ get '/answer/:id/unvote' do
 
   vote.update(agree: nil) if vote
 
-  redirect request.referer
+  Vote.where(answer: params[:id], agree: true).length.to_s
 end
 
 get '/question/:id/addtopic' do
@@ -246,7 +246,8 @@ helpers do
       return
     else
       session[:return_to] ||= request.referer
-      redirect '/login'
+      #redirect '/login'
+      halt 401 
     end
   end
 

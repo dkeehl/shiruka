@@ -115,6 +115,10 @@ body {
   position: relative;
 }
 
+button.up:hover, button.down:hover {
+  border: solid 1px #698ebf;
+}
+
 button {
   padding: 0;
 }
@@ -152,6 +156,18 @@ button {
   border-top-color: #698ebf;
 }
 
+.votebar [aria-pressed=true] {
+  background-color: #698ebf;
+  color: white;
+}
+
+[aria-pressed=true].up .vote-arrow {
+  border-bottom-color: white;
+}
+
+[aria-pressed=true].down .vote-arrow {
+  border-top-color: white;
+}
 
 .tag-editor-remove-button {
   visibility: hidden;

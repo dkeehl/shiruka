@@ -1,3 +1,76 @@
+// AJAX callback function
+function loadDoc(url, cFunction) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState === 4 && this.status === 200) {
+      cFunction(this);
+    } else if (this.readyState === 4 && this.status === 401) {
+      showElement("login-form");
+    }
+  };
+
+  xhttp.open("GET", url, true);
+  xhttp.send();
+}
+
+// Upvote and Downvote answers
+function upvote(id) {
+  var url = "/answer/" + id + "/upvote";
+  loadDoc(url, vote(id, "upvote"));
+} 
+function unvote(id) {
+  var url = "/answer/" + id + "/unvote";
+  loadDoc(url, vote(id, "unvote"));
+}
+
+function downvote(id) {
+  var url = "/answer/" + id + "/downvote";
+  loadDoc(url, vote(id, "downvote"));
+}
+/*
+function unvote(id) {
+  var url = "/answer/" + id + "/unvote";
+  function cFunc(x) {}
+  loadDoc(url, cFunc);
+}
+*/
+
+var up_arrow_pressed = { pressed:"true", action:"unvote", text:"取消赞同" }
+var up_arrow = { pressed:"false", action:"upvote", text:"赞同" }
+var down_arrow_pressed = { pressed:"true", action:"unvote", text:"取消反对" }
+var down_arrow = { pressed:"false", action:"downvote", text:"反对，不会显示你的名字" }
+
+function set_arrow_state(button, state) {
+  var id = /\d+/.exec(button.getAttribute("onclick"));
+  button.setAttribute("aria-pressed", state.pressed);
+  button.setAttribute("onclick", state.action + "(" + id + ")");
+  button.setAttribute("title", state.text);
+}
+
+function vote(id, vote_type) {
+  return function(xhttp) {
+    var itemAnswer = document.getElementById("item-answer-" + id);
+    var button_up = itemAnswer.getElementsByClassName("up")[0];
+    var button_down = itemAnswer.getElementsByClassName("down")[0];
+    switch(vote_type) {
+      case "unvote":
+        set_arrow_state(button_up, up_arrow);
+        set_arrow_state(button_down, down_arrow);
+        break;
+      case "upvote":
+        set_arrow_state(button_up, up_arrow_pressed);
+        set_arrow_state(button_down, down_arrow);
+        break;
+      case "downvote":
+        set_arrow_state(button_up, up_arrow);
+        set_arrow_state(button_down, down_arrow_pressed);
+    }
+    itemAnswer.querySelectorAll("span.count")[0].innerHTML = xhttp.responseText;
+  }
+}
+
+
+// show-hiding elements
 function showElement(id) {
   var x = document.getElementById(id);
   if (x.style.display === "block") {

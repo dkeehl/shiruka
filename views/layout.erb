@@ -6,7 +6,22 @@
     <script type="text/javascript" src="/js/main.js"></script>
   </head>
   <body>
-    <div id="modal"></div>
+    <div id="modal" class="canvas" style="display: none"></div>
+    <div id="login-form" class="canvas" style="display: none">
+      <div class="login-form-inner">
+        <form action="login" method="post">
+          <span onclick="showElement('login-form')" title="close" class="close">
+            &times;
+          </span>
+          <label>Email:</label>
+          <input type="email" name="email"><br>
+          <label>Password:</label>
+          <input type="password" name="password"><br>
+          <br>
+          <input type="submit" value="Login">
+        </form>
+      </div>
+    </div>
     <div class="sa-top">
       <div id="sa-top-inner" class="zg-wrap">
         <a id="sh-top-link-logo" class="sh-top-link-logo" href="/">SHIRUKA</a> 
