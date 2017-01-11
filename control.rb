@@ -23,9 +23,9 @@ post '/login' do
   user = User.auth(params[:email], params[:password])
   if user
     session[:user] = user
-    redirect session.delete(:return_to)
+    redirect request.referer
   else
-    redirect '/login'
+    halt 401
   end
 end
 
@@ -54,7 +54,6 @@ end
 # Questions
 
 get '/ask' do
-  check_login
   erb :ask
 end
 
@@ -245,7 +244,7 @@ helpers do
     if session[:user]
       return
     else
-      session[:return_to] ||= request.referer
+      #session[:return_to] ||= request.referer
       #redirect '/login'
       halt 401 
     end

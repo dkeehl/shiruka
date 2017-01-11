@@ -27,13 +27,6 @@ function downvote(id) {
   var url = "/answer/" + id + "/downvote";
   loadDoc(url, vote(id, "downvote"));
 }
-/*
-function unvote(id) {
-  var url = "/answer/" + id + "/unvote";
-  function cFunc(x) {}
-  loadDoc(url, cFunc);
-}
-*/
 
 var up_arrow_pressed = { pressed:"true", action:"unvote", text:"取消赞同" }
 var up_arrow = { pressed:"false", action:"upvote", text:"赞同" }
@@ -69,6 +62,28 @@ function vote(id, vote_type) {
   }
 }
 
+// login
+function bindLogin() {
+  var form = document.getElementById("js-login-form");
+  function sendData() {
+    var form_data = new FormData(form);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState === 4 && this.status === 200) {
+        window.location.assign(this.responseURL);
+      } else if (this.readyState === 4 && this.status === 401) {
+        var lbl = document.querySelector(".login-form-inner label.error");
+        lbl.setAttribute("class", "error is-visible");
+      }
+    };
+    xhttp.open("POST", "/login");
+    xhttp.send(form_data);
+  }
+  form.addEventListener("submit", function(event) {
+    event.preventDefault();
+    sendData();
+  });
+}
 
 // show-hiding elements
 function showElement(id) {
@@ -142,4 +157,5 @@ function deleteContent(type, id) {
 window.onload = function() {
   var x = document.getElementById("edit_tags");
   x.addEventListener("click", showTagEditor);
+  bindLogin();
 }

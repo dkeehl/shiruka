@@ -9,17 +9,26 @@
     <div id="modal" class="canvas" style="display: none"></div>
     <div id="login-form" class="canvas" style="display: none">
       <div class="login-form-inner">
-        <form action="login" method="post">
+        <div class="dialog-title">
+          <h1>登录</h1>
           <span onclick="showElement('login-form')" title="close" class="close">
             &times;
           </span>
-          <label>Email:</label>
-          <input type="email" name="email"><br>
-          <label>Password:</label>
-          <input type="password" name="password"><br>
-          <br>
-          <input type="submit" value="Login">
-        </form>
+          <label class="error">账号或密码错误</label>
+        </div>
+        <div class="dialog-content">
+          <form id="js-login-form">
+            <div class="input-wrapper">
+              <input class="email" placeholder="邮箱" type="email" name="email">
+            </div>
+            <div class="input-wrapper">
+              <input type="password" placeholder="密码" name="password">
+            </div>
+            <div class="actions">
+              <button class="submit blue-button" type="submit">登录</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
     <div class="sa-top">

@@ -235,4 +235,99 @@ button {
   text-align: center;
 }
 
+#login-form {
+  z-index: 5;
+  background-color: rgba(250,250,250,.8);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.login-form-inner {
+  position: relative;
+  margin: 20vh auto;
+  width: 300px;
+  border: solid 1px #cbcbcb;
+  background-color: #fff;
+  box-shadow: 0 0 15px 0 rgba(0,0,0,.3);
+  transition: .3s ease-out;
+  border-radius: 5px;
+  color: #787878;
+}
+
+.dialog-title {
+  padding-top: 25px;
+  padding-bottom: 25px;
+  text-align: center;
+  line-height: 1;
+}
+
+span.close {
+  display: block;
+  position: absolute;
+  right: 20px;
+  top: 0;
+  top: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.input-wrapper {
+  border-bottom: 1px solid #eee;
+}
+
+.dialog-content .input-wrapper:first-child {
+  border-top: 1px solid #eee;
+}
+
+.input-wrapper input {
+  padding: 15px 8px;
+  font-size: 14px;
+  line-height: 18px;
+  color: #787878;
+  border: 0;
+  outline: 0;
+}
+
+#login-form .actions {
+  margin-top: 12px;
+  margin-bottom: 6px;
+  padding: 0 8px;
+  line-height: 30px;
+}
+
+
+#login-form .blue-button {
+  width: 100%;
+  padding: 10px 0;
+  display: inline-box;
+  background-color: #0077d9;
+  font-size: 14px;
+  line-height: 1;
+  color: #fff;
+  border: 0;
+  border-radius: 3px;
+  outline: 0;
+  cursor: pointer;
+}
+
+.login-form-inner label.error.is-visible {
+  visibility: visible;
+  opacity: 1;
+  transform: translate(0,0);
+}
+
+.login-form-inner label.error {
+  position: absolute;
+  top: 45px;
+  left: 105px;
+  color: #c33;
+  cursor: text;
+  visibility: hidden;
+  opacity: 0;
+  transition: .25s;
+  transform: translate(8px, 0);
+}
 

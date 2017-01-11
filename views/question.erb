@@ -45,12 +45,16 @@
      a = '<span>一个问题只能回答一次</sapn>'
    else
      a =<<-EOS
-      我来回答：<br>
-      <form action="/question/#{ @question.id }/answer" method="post">
-        <textarea name="content" rows="5" cols="60">
-        </textarea><br>
-        <input type="submit" value="发布回答">
-      </form>
+      <div id="question-answer-form-wrap" class="question-answer-form-wrap">
+        <div class="answer-form-title">我来回答这个问题：</div>
+        <div class="editor-field">
+          <form action="/question/#{ @question.id }/answer" method="post">
+            <textarea name="content" rows="5" cols="60">
+            </textarea><br>
+            <input type="submit" value="发布回答">
+          </form>
+        </div>
+      </div>
      EOS
    end
  %>
