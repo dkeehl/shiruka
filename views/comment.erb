@@ -1,10 +1,16 @@
-<a href="/user/<%= comment.user_id %>"><%= comment.user.name %></a>
-<p><%= comment.content %></p>
+<div class="comment-item-root">
+  <div class="comment-item-body">
+    <div class="comment-item-header">
+      <a href="/user/<%= comment.user_id %>"><%= comment.user.name %></a>
+    </div>
+    <div class="comment-item-content"><%= comment.content %></div>
 
-<% if user_in_ids?(answer.user_id, comment.user_id, 1) %>
-  <%=
-    %Q|<a href="javascript: deleteContent('comment', #{ comment.id } );">删除</a>|
-  %>
-<% end %>
-<br>
-
+    <div class="comment-item-footer">
+    <% if user_in_ids?(answer.user_id, comment.user_id, 1) %>
+      <%=
+        %Q|<a href="javascript: deleteContent('comment', #{ comment.id } );">删除</a>|
+      %>
+    <% end %>
+    </div>
+  </div>
+</div>

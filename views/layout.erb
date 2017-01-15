@@ -6,7 +6,39 @@
     <script type="text/javascript" src="/js/main.js"></script>
   </head>
   <body>
+    <div class="sa-top">
+      <div id="sa-top-inner" class="zg-wrap">
+        <a id="sh-top-link-logo" class="sh-top-link-logo" href="/">SHIRUKA</a> 
+        <%= if session[:user] 
+              erb :top_nav_profile
+            else
+              erb :top_nav_noauth
+            end
+        %>
+        <%= erb :top_search %>
+        <div id="top-nav" class="top-nav">
+          <ul class="sa-top-nav-ul">
+            <li class="sa-top-nav-li">
+              <a class="sa-top-nav-link" href="/explore">发现</a>
+            </li>
+            <li class="sa-top-nav-li">
+              <a class="sa-top-nav-link" href="/ask">提问</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="sa-main zg-wrap">
+      <div class="sa-main-content">
+        <div class="sa-main-content-inner">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+
     <div id="modal" class="canvas" style="display: none"></div>
+
     <div id="login-form" class="canvas" style="display: none">
       <div class="login-form-inner">
         <div class="dialog-title">
@@ -17,7 +49,7 @@
           <label class="error">账号或密码错误</label>
         </div>
         <div class="dialog-content">
-          <form id="js-login-form">
+          <form id="js-login-form" action="POST">
             <div class="input-wrapper">
               <input class="email" placeholder="邮箱" type="email" name="email">
             </div>
@@ -31,32 +63,6 @@
         </div>
       </div>
     </div>
-    <div class="sa-top">
-      <div id="sa-top-inner" class="zg-wrap">
-        <a id="sh-top-link-logo" class="sh-top-link-logo" href="/">SHIRUKA</a> 
-        <ul class="sa-top-nav-ul">
-          <li class="sa-top-nav-li">
-            <a class="sa-top-nav-link" href="/">首页</a>
-          </li>
-          <li class="sa-top-nav-li">
-            <a class="sa-top-nav-link" href="/ask">提问</a>
-          </li>
-          <li class="sa-top-nav-li">
-            <a class="sa-top-nav-link" href="/explore">发现</a>
-          </li>
-          <li class="sa-top-nav-li">
-            <a class="sa-top-nav-link" href="/logout">退出</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="sa-main zg-wrap">
-      <div class="sa-main-content">
-        <div class="sa-main-content-inner">
-          <%= yield %>
-        </div>
-      </div>
 
-    </div>
   </body>
 </html>

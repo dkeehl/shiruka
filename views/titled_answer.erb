@@ -1,8 +1,9 @@
 <% answers.each do |answer| %>
+  <div class="feed-item">
   <% question = answer.question %>
   <h2>
     <a href="/question/<%= question.id %>"><%= question.name %></a>
   </h2>
   <%= erb :answer, locals: {answer: answer} %>
-  <br>
+  </div>
 <% end %>

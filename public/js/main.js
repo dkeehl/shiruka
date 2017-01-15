@@ -154,8 +154,8 @@ function deleteContent(type, id) {
   </div>"
 }
 
-window.onload = function() {
+window.addEventListener("DOMContentLoaded", function() {
+  bindLogin();
   var x = document.getElementById("edit_tags");
   x.addEventListener("click", showTagEditor);
-  bindLogin();
-}
+}, false);

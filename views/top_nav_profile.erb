@@ -1,0 +1,8 @@
+<div class="top-nav-profile">
+  <a href="/user/<%= session[:user].id %>" class="top-nav-userinfo">
+    <span class="name"><%= session[:user].name %></span>
+  </a>
+  <div id="top-nav-profile-dropdown" class="top-nav-dropdown">
+    <a href="/logout">退出</a>
+  </div>
+</div>

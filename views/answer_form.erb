@@ -1,0 +1,14 @@
+<div id="question-answer-form-wrap" class="question-answer-form-wrap">
+  <div class="answer-form-title">我来回答这个问题：</div>
+  <div class="editor-field">
+    <form action="/question/#{ @question.id }/answer" method="post">
+      <div class="editor-text-wrap">
+        <textarea class="editor-text" name="content" placeholder="写回答..."> </textarea>
+      </div>
+      <div class="submit btn-blue">
+        <input type="submit" value="发布回答">
+      </div>
+    </form>
+  </div>
+</div>
+
