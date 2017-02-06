@@ -1,8 +1,7 @@
-require 'sinatra/activerecord'
-require 'sinatra'
+#require 'sinatra/activerecord'
+require 'active_record'
 require 'bcrypt'
 
-set :database, {adapter: 'sqlite3', database: 'shiruka.sqlite3'}
 
 class User < ActiveRecord::Base
   has_many :answers

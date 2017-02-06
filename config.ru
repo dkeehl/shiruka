@@ -1,3 +1,3 @@
 require './control'
 
-run Sinatra::Application
+run Shiruka
