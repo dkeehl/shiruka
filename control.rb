@@ -1,6 +1,6 @@
-require 'sinatra'
+require 'sinatra/base'
 require 'sinatra/activerecord'
-require './model'
+require_relative 'model'
 
 class Shiruka < Sinatra::Base
 
@@ -10,13 +10,10 @@ class Shiruka < Sinatra::Base
 
   use Rack::Session::Pool, expire_after: 2592000
 
+  enable :logging
+
   get '/' do
-    @user = session[:user]
-    if @user
-      erb :home
-    else
-      redirect '/login'
-    end
+    redirect '/explore'
   end
 
   #########################
