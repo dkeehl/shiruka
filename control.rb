@@ -11,6 +11,7 @@ class Shiruka < Sinatra::Base
   use Rack::Session::Pool, expire_after: 2592000
 
   enable :logging
+  enable :method_override
 
   get '/' do
     redirect '/explore'
@@ -28,7 +29,7 @@ class Shiruka < Sinatra::Base
     user = User.auth(params[:email], params[:password])
     if user
       session[:user] = user
-      redirect request.referer
+      redirect session[:referer] || '/'
     else
       halt 401
     end
@@ -55,6 +56,26 @@ class Shiruka < Sinatra::Base
     redirect '/login'
   end
 
+  protected_src = [
+    '/question/create',
+    '/question/delete',
+    '/question/:id/answer/create',
+    '/answer/:id/update',
+    '/answer/:id/delete',
+    '/answer/:id/comment/create',
+    '/question/:id/addtopic',
+    '/question/:id/deltopic',
+    '/followuser/:id',
+  ]
+
+  protected_src.each do |path|
+    before path do
+      check_login do
+        session[:referer] = request.referer
+        redirect '/login'
+      end
+    end
+  end
   #############################
   # Questions
 
@@ -62,7 +83,7 @@ class Shiruka < Sinatra::Base
     erb :ask
   end
 
-  post '/question' do
+  post '/question/create' do
     user_id = session[:user].id
     q = Question.new(name: params[:name],
                      description: params[:description],
@@ -84,15 +105,14 @@ class Shiruka < Sinatra::Base
     end
   end
 
-  delete '/question/:id' do
+  delete '/question/delete' do
     q = Question.find(paramas[:id]).destroy
     redirect request.referer
   end
   #############################
   # Answers
 
-  post '/question/:id/answer' do
-    check_login
+  post '/question/:id/answer/create' do
     answer = Answer.new(content: params[:content],
                          question_id: params[:id],
                          user_id: session[:user].id)
@@ -100,28 +120,27 @@ class Shiruka < Sinatra::Base
     redirect "/question/#{params[:id]}"
   end
 
-  put '/answer/:id' do
+  put '/answer/:id/update' do
     answer = Answer.find(params[:id])
     answer.content = params[:content]
     answer.save
     redirect "/question/#{answer.question.id}"
   end
 
-  delete '/answer/:id' do
+  delete '/answer/:id/delete' do
     Answer.find(params[:id]).destroy
     redirect request.referer
   end
     
-  post '/answer/:id/comment' do
-    check_login
+  post '/answer/:id/comment/create' do
     comment = Comment.new(content: params[:content],
                           answer_id: params[:id],
                           user_id: session[:user].id)
     comment.save
-    redirect ''
+    redirect request.referer || '/'
   end
 
-  delete '/comment/:id' do
+  delete '/comment/:id/delete' do
     Comment.find(params[:id]).destroy
     redirect request.referer
   end
@@ -181,7 +200,6 @@ class Shiruka < Sinatra::Base
   end
 
   get '/question/:id/addtopic' do
-    #check_login
 
     topic = Topic.find_by(name: params[:topic])
     halt 404 unless topic
@@ -197,7 +215,6 @@ class Shiruka < Sinatra::Base
   end
 
   get '/question/:id/deltopic' do
-    check_login
 
     topic_id = Topic.find_by(name: params[:topic])
     halt 404 unless topic_id
@@ -224,7 +241,6 @@ class Shiruka < Sinatra::Base
   end
 
   get '/followuser/:id' do
-    check_login
 
     @user = User.find(params[:id])
     not_found unless @user
@@ -246,24 +262,18 @@ class Shiruka < Sinatra::Base
     end
 
     def check_login
-      if session[:user]
-        return
-      else
-        #session[:return_to] ||= request.referer
-        #redirect '/login'
-        halt 401 
-      end
+      yield unless session[:user]
     end
 
     def check_vote(answer_id)
-      check_login
+      check_login { halt 401 }
 
       answer = Answer.find(answer_id)
       halt 404 unless answer
 
       # One could not vote for his own answer
       if answer.user_id == session[:user].id
-        redirect request.referer
+        halt 404
       end
 
       vote = Vote.find_by(user_id: session[:user].id,

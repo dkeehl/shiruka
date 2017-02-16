@@ -146,7 +146,7 @@ function deleteContent(type, id) {
   confirmBox.innerHTML = "\
   <div class='container'> \
     <p>确认删除？</p> \
-    <form action='/" + type + "/" + id + "' method='post'> \
+    <form action='/" + type + "/" + id + "/delete' method='post'> \
       <input type='hidden' name='_method' value='delete'> \
       <input type='submit' value='删除'> \
       <button type='button' onclick='document.getElementById(\"modal\").style.display = \"none\"'>取消</button> \

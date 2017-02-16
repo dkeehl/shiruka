@@ -42,7 +42,13 @@
     <a class="meta-item" href="javascript: showElement('<%= "editor#{answer.id}" %>');">修改</a>
   <% end %>
 
-  <a class="meta-item" href="javascript: showElement(<%= "\'cmt#{answer.id}\'" %>);">评论</a>
+  <a class="meta-item" href="javascript: showElement(<%= "\'cmt#{answer.id}\'" %>);">
+    <% if answer.comments.blank? %>
+      评论
+    <% else %>
+      <%= answer.comments.count %>条评论
+    <% end %>
+  </a>
 
   <% if user_in_ids?(answer.user_id, 1) %>
     <%=
@@ -51,7 +57,7 @@
   <% end %>
 
   <div id="<%= "editor#{answer.id}" %>" style="display: none">
-    <form action="/answer/<%= answer.id %>" method="post">
+    <form action="/answer/<%= answer.id %>/update" method="post">
       <input type="hidden" name="_method" value="put">
       <textarea name="content" rows="5" cols="60"><%= answer.content %></textarea>
       <input type="submit" formaction="javascript: showElement('<%= "editor#{answer.id}" %>');" value="取消">
