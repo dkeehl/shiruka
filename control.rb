@@ -233,6 +233,15 @@ class Shiruka < Sinatra::Base
     erb :search_topic, layout: false
   end
 
+  get '/search' do
+    if params[:q] && params[:q].length > 0
+      @results = Answer.search(params[:q])
+    else
+      @results = nil
+    end
+    erb :search_result
+  end
+
   ############################################
   # Followings
   get '/user/:id' do
