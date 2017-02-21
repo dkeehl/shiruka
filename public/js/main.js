@@ -1,3 +1,9 @@
+document.addEventListener("DOMContentLoaded", initialize, false);
+
+function initialize() {
+  bindLogin();
+}
+
 // AJAX callback function
 function loadDoc(url, cFunction) {
   var xhttp = new XMLHttpRequest();
@@ -28,10 +34,10 @@ function downvote(id) {
   loadDoc(url, vote(id, "downvote"));
 }
 
-var up_arrow_pressed = { pressed:"true", action:"unvote", text:"取消赞同" }
-var up_arrow = { pressed:"false", action:"upvote", text:"赞同" }
-var down_arrow_pressed = { pressed:"true", action:"unvote", text:"取消反对" }
-var down_arrow = { pressed:"false", action:"downvote", text:"反对，不会显示你的名字" }
+var up_arrow_pressed = { pressed:"true", action:"unvote", text:"取消赞同" };
+var up_arrow = { pressed:"false", action:"upvote", text:"赞同" };
+var down_arrow_pressed = { pressed:"true", action:"unvote", text:"取消反对" };
+var down_arrow = { pressed:"false", action:"downvote", text:"反对，不会显示你的名字" };
 
 function set_arrow_state(button, state) {
   var id = /\d+/.exec(button.getAttribute("onclick"));
@@ -141,21 +147,9 @@ function showTagEditor() {
 }
 
 function deleteContent(type, id) {
-  confirmBox = document.getElementById("modal")
-  confirmBox.style.display = "block"
-  confirmBox.innerHTML = "\
-  <div class='container'> \
-    <p>确认删除？</p> \
-    <form action='/" + type + "/" + id + "/delete' method='post'> \
-      <input type='hidden' name='_method' value='delete'> \
-      <input type='submit' value='删除'> \
-      <button type='button' onclick='document.getElementById(\"modal\").style.display = \"none\"'>取消</button> \
-    </form> \
-  </div>"
+  var confirmBox = document.getElementById("modal");
+  confirmBox.style.display = "block";
+  var form = confirmBox.querySelector('form');
+  form.setAttribute('action', `/${type}/${id}/delete`);  
 }
 
-window.addEventListener("DOMContentLoaded", function() {
-  bindLogin();
-  var x = document.getElementById("edit_tags");
-  x.addEventListener("click", showTagEditor);
-}, false);

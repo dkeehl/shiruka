@@ -66,6 +66,7 @@ class Shiruka < Sinatra::Base
     '/question/:id/addtopic',
     '/question/:id/deltopic',
     '/followuser/:id',
+    '/upload',
   ]
 
   protected_src.each do |path|
@@ -264,6 +265,24 @@ class Shiruka < Sinatra::Base
     redirect request.referer
   end
 
+########################
+# file upload
+  post '/upload' do
+    return 'no file selected' unless params[:file]
+
+    file = params[:file][:tempfile]
+    file_name = params[:file][:filename]
+
+    File.open("./public/img/#{file_name}", 'wb') do |f|
+      f.write file.read
+    end
+
+    redirect request.referer
+  end
+
+  get '/modify-personal-info' do
+    erb :user_home
+  end
 
   helpers do
     def title
