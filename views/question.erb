@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/css/tags.css">
 <div class="with-indention-votebar">
 <%= erb :tag_area %>
 
@@ -7,6 +8,10 @@
 
 <div id="question-detail" class="rich-text">
   <p><%= @question.description %></p>
+</div>
+
+<div id="question-footer meta-panel">
+  <a class="meta-item" href="javascript:;">评论</a>
 </div>
 
 <div class="answers-title">
@@ -26,3 +31,5 @@
    end
 %>
 </div>
+<script type="text/javascript" src="/js/tags.js"></script>
+

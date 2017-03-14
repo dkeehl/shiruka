@@ -499,7 +499,7 @@ button {
 
 #login-form {
   z-index: 99;
-  background-color: rgba(250,250,250,.8);
+  background-color: rgba(0,0,0,.65);
   position: fixed;
   top: 0;
   left: 0;

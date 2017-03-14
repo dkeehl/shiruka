@@ -36,7 +36,7 @@ class Shiruka < Sinatra::Base
   end
 
   get '/sign_up' do
-    @title = 'sign_up'
+    @title = 'Sign up'
     erb :sign_up
   end
 
@@ -200,6 +200,8 @@ class Shiruka < Sinatra::Base
     Vote.where(answer: params[:id], agree: true).length.to_s
   end
 
+  #topics
+
   get '/question/:id/addtopic' do
 
     topic = Topic.find_by(name: params[:topic])
@@ -228,10 +230,18 @@ class Shiruka < Sinatra::Base
     redirect request.referer
   end
 
+  post '/question/:id/modify-topics' do
+    halt 404 unless params[:topics]
+    new_topics = params[:topics].split(',').map(&:to_i)
+
+    QuestionsTopic.update_topics params[:id], new_topics
+    
+    halt 200
+  end
 
   get '/search_topic' do
-    @results = Topic.where("name like ?", "%#{params[:q]}%")
-    erb :search_topic, layout: false
+    @results = Topic.where("name like ?", "%#{params[:q]}%").limit(10)
+    @results.select('id, name').to_json
   end
 
   get '/search' do
@@ -286,7 +296,7 @@ class Shiruka < Sinatra::Base
 
   helpers do
     def title
-      @title ? @title : 'しるか'
+      @title ||=  'しるか'
     end
 
     def check_login

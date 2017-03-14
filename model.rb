@@ -77,6 +77,32 @@ class QuestionsTopic < ActiveRecord::Base
 
   validates :topic_id, presence: true
   validates :question_id, presence: true
+
+  class << self
+    def update_topics(q_id, topics)
+      old_topics = []
+      ot = where(question_id: q_id)
+      ot.each do |r|
+        old_topics << r.topic_id
+      end
+
+      add, del = diff_topic(old_topics, topics)
+      
+      #delete
+      del.each { |id| ot.find_by(topic_id: id).destroy }
+      #add new
+      add.each do |id|
+        create question_id: q_id, topic_id: id
+      end
+    end
+      
+    private
+    def diff_topic(old_topics, new_topics)
+      del = old_topics - new_topics
+      add = new_topics - old_topics
+      return add, del
+    end
+  end
 end
 
 class FollowingUser < ActiveRecord::Base

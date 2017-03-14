@@ -5,9 +5,9 @@ function initialize() {
 }
 
 // AJAX callback function
-function loadDoc(url, cFunction) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
+function getAjax(url, cFunction) {
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
     if (this.readyState === 4 && this.status === 200) {
       cFunction(this);
     } else if (this.readyState === 4 && this.status === 401) {
@@ -15,23 +15,42 @@ function loadDoc(url, cFunction) {
     }
   };
 
-  xhttp.open("GET", url, true);
-  xhttp.send();
+  xhr.open("GET", url, true);
+  xhr.send();
 }
+
+// AJAX post
+function postAjax(url, data, success) {
+  var params = typeof data == 'string' ? data : Object.keys(data).map(
+    function(k) { return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
+  ).join('&');
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', url);
+  xhr.onreadystatechange = function() {
+    if (this.readyState > 3 && this.status === 200) { success(this); }
+  };
+
+  xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.send(params);
+  return xhr;
+}
+
 
 // Upvote and Downvote answers
 function upvote(id) {
   var url = "/answer/" + id + "/upvote";
-  loadDoc(url, vote(id, "upvote"));
+  getAjax(url, vote(id, "upvote"));
 } 
 function unvote(id) {
   var url = "/answer/" + id + "/unvote";
-  loadDoc(url, vote(id, "unvote"));
+  getAjax(url, vote(id, "unvote"));
 }
 
 function downvote(id) {
   var url = "/answer/" + id + "/downvote";
-  loadDoc(url, vote(id, "downvote"));
+  getAjax(url, vote(id, "downvote"));
 }
 
 var up_arrow_pressed = { pressed:"true", action:"unvote", text:"取消赞同" };
@@ -98,51 +117,6 @@ function showElement(id) {
    x.style.display = "none";
   } else {
     x.style.display = "block";
-  }
-}
-
-function showResult(str) {
-  if (str.length === 0) {
-    document.getElementById("livesearch").innerHTML="";
-    document.getElementById("livesearch").style.border="0px";
-    return;
-  }
-
-  xmlhttp = new XMLHttpRequest();
-
-  xmlhttp.onreadystatechange = function() {
-    if (this.readyState === 4 &&
-        this.status === 200 &&
-        this.responseText.length > 0) {
-
-      var hintList = document.getElementById("livesearch");
-      hintList.innerHTML = this.responseText;
-      hintList.style.border = "1px solid #A5ACB2";
-
-      var topics = document.getElementsByClassName("auto-complete-row");
-      for (i = 0; i < topics.length; i++) {
-        topics[i].addEventListener("click", function(){ addTopic(this.title); });
-      }
-    }
-  }
-
-  xmlhttp.open("GET", "/search_topic?q=" + str, true);
-  xmlhttp.send();
-}
-
-function addTopic(topic) {
-  document.getElementById("topic-search-box").value = topic;
-}
-
-function showTagEditor() {
-  showElement("tag_editor");
-  var buttons = document.getElementsByClassName("tag-editor-remove-button");
-  for (i = 0; i < buttons.length; i++) {
-    if (buttons[i].style.visibility === "visible") {
-      buttons[i].style.visibility = "hidden";
-    } else {
-      buttons[i].style.visibility = "visible";
-    }
   }
 }
 
